@@ -65,24 +65,24 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   Future<List<WashStation>> fetchWashStations() async {
-    // final response = await http.get(Uri.parse('http://10.0.2.2:8000/api/wash_stations?page=1'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:8000/api/wash_stations?page=1'));
 
-    // if (response.statusCode == 200) {
-    //   Map<String, dynamic> jsonResponse = json.decode(response.body);
-    //   List washStations = jsonResponse['hydra:member'];
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      List washStations = jsonResponse['hydra:member'];
 
-    List<WashStation> wash_stationList = [
-      WashStation(id:1, name: "station 1", address: "1 rue gpt", latitude: 50, longitude: 50, price: 10.1),
-      WashStation(id:2, name: "station 2", address: "2 rue gpt", latitude: 50, longitude: 50, price: 10.2),
-      WashStation(id:3, name: "station 3", address: "3 rue gpt", latitude: 50, longitude: 50, price: 10.3),
-      WashStation(id:4, name: "station 4", address: "4 rue gpt", latitude: 50, longitude: 50, price: 10.4)
-    ];
-    return wash_stationList;
+    // List<WashStation> wash_stationList = [
+    //   WashStation(id:1, name: "station 1", address: "1 rue gpt", latitude: 50, longitude: 50, price: 10.1),
+    //   WashStation(id:2, name: "station 2", address: "2 rue gpt", latitude: 50, longitude: 50, price: 10.2),
+    //   WashStation(id:3, name: "station 3", address: "3 rue gpt", latitude: 50, longitude: 50, price: 10.3),
+    //   WashStation(id:4, name: "station 4", address: "4 rue gpt", latitude: 50, longitude: 50, price: 10.4)
+    // ];
+    // return wash_stationList;
 
-  //     return washStations.map((item) => WashStation.fromJson(item)).toList();
-  //   } else {
-  //     throw Exception('Failed to load wash stations');
-  //   }
+      return washStations.map((item) => WashStation.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load wash stations');
+    }
   }
 
   @override
