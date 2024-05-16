@@ -13,7 +13,7 @@ class WashStationPage extends StatelessWidget{
   void _launchGPS() async {
     // const String url = "sms:";
     // const String url = "https://flutter.dev/";
-    final String url = "geo:47.6,-122.3";
+    final String url = "https://www.google.com/maps/search/?api=1&query=47.6,-122.3";
     final Uri uri = Uri.parse(url);
 
     if(await canLaunchUrl(uri)){
