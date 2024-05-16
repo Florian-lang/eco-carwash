@@ -65,7 +65,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   Future<List<WashStation>> fetchWashStations() async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:8000/api/wash_stations?page=1'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:8081/api/wash_stations?page=1'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);
@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => WashPage.WashStationPage(name: snapshot.data![index].name, address: snapshot.data![index].address, latitude: snapshot.data![index].latitude, longitude: snapshot.data![index].longitude, price: snapshot.data![index].price,)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => WashPage.WashStationPage(name: snapshot.data![index].name, address: snapshot.data![index].address, latitude: snapshot.data![index].latitude, longitude: snapshot.data![index].longitude)));
                 },
                 child: ListTile(
                   title: Text(snapshot.data![index].name),

@@ -4,7 +4,7 @@ class WashStation {
   final String address;
   final int latitude;
   final int longitude;
-  final double price;
+  // final double price;
 
   WashStation({
     required this.id,
@@ -12,7 +12,7 @@ class WashStation {
     required this.address,
     required this.latitude,
     required this.longitude,
-    required this.price
+    // required this.price
   });
 
   factory WashStation.fromJson(Map<String, dynamic> json) {
@@ -22,7 +22,7 @@ class WashStation {
       address: json['address'],
       latitude: json['latitude'],
       longitude: json['longitude'],
-      price: json['price']
+      // price: json['price']
     );
   }
 }
