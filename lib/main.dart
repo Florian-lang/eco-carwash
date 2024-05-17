@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: (){
-                    var washStation = snapshot.data![index];
+                    WashStation washStation = snapshot.data![index];
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => WashStationPage(washStation: washStation)));
                 },
                 child: Row(
