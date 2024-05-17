@@ -91,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: Colors.lightBlueAccent,
       ),
       drawer: Drawer(
         child: ListView(
@@ -103,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text(
                 'Menu',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.grey,
                   fontSize: 24,
                 ),
               ),
@@ -126,19 +127,26 @@ class _MyHomePageState extends State<MyHomePage> {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }
 
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               return GestureDetector(
-                onTap: (){
+                onTap: (){ 
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => WashPage.WashStationPage(name: snapshot.data![index].name, address: snapshot.data![index].address, latitude: snapshot.data![index].latitude, longitude: snapshot.data![index].longitude)));
                 },
-                child: ListTile(
-                  title: Text(snapshot.data![index].name),
-                  subtitle: Text(snapshot.data![index].address),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: ListTile(
+                        title: Text(snapshot.data![index].name),
+                        subtitle: Text(snapshot.data![index].address),
+                      ),
+                    ),
+                    const Expanded(child: Icon(Icons.euro)),
+                  ],
                 ),
               );
             },
