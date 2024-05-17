@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:eco_carwash/Widget/DynamicDrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Entity/WashStation.dart';
 import 'loginPage.dart';
-import 'WashStation/washStation_page.dart' as WashPage;
+import 'WashStation/washStationPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -69,19 +68,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<List<WashStation>> fetchWashStations() async {
     final response = await http.get(Uri.parse('http://10.0.2.2:8081/api/wash_stations?page=1'));
-     if (response.statusCode == 200) {
-       Map<String, dynamic> jsonResponse = json.decode(response.body);
-       List washStations = jsonResponse['hydra:member'];
-       return washStations.map((item) => WashStation.fromJson(item)).toList();
-     } else {
-       throw Exception('Failed to load wash stations');
-     }
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      List washStations = jsonResponse['hydra:member'];
+      return washStations.map((item) => WashStation.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load wash stations');
+    }
   }
 
   Future<bool> isLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-    print(token);
     return token != null;
   }
 
@@ -134,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: (){ 
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => WashPage.WashStationPage(name: snapshot.data![index].name, address: snapshot.data![index].address, latitude: snapshot.data![index].latitude, longitude: snapshot.data![index].longitude)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => WashStationPage(name: snapshot.data![index].name, address: snapshot.data![index].address, latitude: snapshot.data![index].latitude, longitude: snapshot.data![index].longitude)));
                 },
                 child: Row(
                   children: <Widget>[

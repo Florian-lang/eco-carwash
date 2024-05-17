@@ -11,16 +11,12 @@ class WashStationPage extends StatelessWidget{
   // final List<dynamic> prices;
 
   void _launchGPS() async {
-    // const String url = "sms:";
-    // const String url = "https://flutter.dev/";
-    // final Uri uriTest = Uri.parse(url);
 
     late Uri uri;
     
     if (Platform.isAndroid) {
       uri = Uri(scheme: 'sms');
-      // uri = Uri(scheme: 'geo', host: '0.0', queryParameters: {'q': '$latitude,$longitude'});
-      uri = Uri.https('www.google.com', '/maps/search/', {'api': '1', 'query': '$latitude,$longitude'});
+      uri = Uri(scheme: 'geo', host: '0.0', queryParameters: {'q': '$latitude,$longitude'});
     } else if (Platform.isIOS) {
       uri = Uri.https('maps.apple.com', '/', {'ll': '$latitude,$longitude'});
     } else if (Platform.isFuchsia) {
@@ -62,10 +58,10 @@ class WashStationPage extends StatelessWidget{
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.3), // Couleur de l'ombre
-                      spreadRadius: 2, // Rayon de dispersion de l'ombre
-                      blurRadius: 2, // Rayon de flou de l'ombre
-                      offset: const Offset(0, 3), // Décalage de l'ombre
+                      color: Colors.black.withOpacity(0.3),
+                      spreadRadius: 2,
+                      blurRadius: 2,
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),

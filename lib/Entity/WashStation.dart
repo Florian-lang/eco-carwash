@@ -1,4 +1,7 @@
 class WashStation {
+  
+  // TODO : remettre les champs en commentaire une fois ls champs de base de données changés
+  
   final int id;
   final String name;
   final String address;
