@@ -5,8 +5,8 @@ class WashStation {
   final int id;
   final String name;
   final String address;
-  final int latitude;
-  final int longitude;
+  final double latitude;
+  final double longitude;
   // final List<dynamic> prices;
 
   WashStation({

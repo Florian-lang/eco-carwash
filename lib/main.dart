@@ -111,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
               leading: const Icon(Icons.account_circle),
               title: const Text('Mon compte'),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginPage()));
               },
             ),
           ],
@@ -132,8 +132,9 @@ class _MyHomePageState extends State<MyHomePage> {
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               return GestureDetector(
-                onTap: (){ 
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => WashStationPage(name: snapshot.data![index].name, address: snapshot.data![index].address, latitude: snapshot.data![index].latitude, longitude: snapshot.data![index].longitude)));
+                onTap: (){
+                    var washStation = snapshot.data![index];
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => WashStationPage(washStation: washStation)));
                 },
                 child: Row(
                   children: <Widget>[
