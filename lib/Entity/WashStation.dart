@@ -1,18 +1,21 @@
-import 'dart:ffi';
-
 class WashStation {
+  
+  // TODO : remettre les champs en commentaire une fois ls champs de base de données changés
+  
   final int id;
   final String name;
   final String address;
   final int latitude;
   final int longitude;
+  // final List<dynamic> prices;
 
   WashStation({
     required this.id,
     required this.name,
     required this.address,
     required this.latitude,
-    required this.longitude
+    required this.longitude,
+    // required this.prices
   });
 
   factory WashStation.fromJson(Map<String, dynamic> json) {
@@ -22,6 +25,7 @@ class WashStation {
       address: json['address'],
       latitude: json['latitude'],
       longitude: json['longitude'],
+      // prices: json['prices']
     );
   }
 }
