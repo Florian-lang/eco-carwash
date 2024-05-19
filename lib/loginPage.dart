@@ -15,8 +15,12 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool connexion = false;
 
   Future<void> login() async {
+    setState(() {
+      connexion = true;
+    });
     final response = await http.post(
       Uri.parse('http://10.0.2.2:8081/api/login'),
       headers: <String, String>{
@@ -35,6 +39,9 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: Colors.red,
         ),
       );
+      setState(() {
+        connexion = false;
+      });
       return;
     }
 
@@ -54,6 +61,9 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       throw Exception('Failed to login');
     }
+    setState(() {
+      connexion = false;
+    });
   }
 
   Future<void> logout() async {
@@ -64,6 +74,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<bool> isLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
+    print(token);
     return token != null;
   }
 
@@ -146,14 +157,17 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        login();
-                      }
-                    },
-                    child: const Text('Se connecter'),
-                  ),
+                  if(connexion)
+                    const CircularProgressIndicator(),
+                  if(!connexion)
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          login();
+                        }
+                      },
+                      child: const Text("Se connecter"),
+                    ),
                 ],
               ),
             ),
