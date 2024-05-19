@@ -74,7 +74,6 @@ class _LoginPageState extends State<LoginPage> {
   Future<bool> isLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-    print(token);
     return token != null;
   }
 
