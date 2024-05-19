@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
