@@ -34,9 +34,9 @@ class _LoginPageState extends State<LoginPage> {
 
     if(response.statusCode != 200) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('L\'identifiant ou le mot de passe est incorrect'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: const Text('L\'identifiant ou le mot de passe est incorrect'),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
       setState(() {
@@ -121,7 +121,8 @@ class _LoginPageState extends State<LoginPage> {
         } else {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Connexion'),
+              title: Text('Connexion', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
             body: Form(
               key: _formKey,
@@ -165,7 +166,8 @@ class _LoginPageState extends State<LoginPage> {
                           login();
                         }
                       },
-                      child: const Text("Se connecter"),
+                      style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
+                      child: Text("Se connecter", style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),),
                     ),
                 ],
               ),

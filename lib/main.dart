@@ -36,7 +36,8 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorSchemeSeed:Color.fromARGB(255, 77, 125, 180),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Eco CarWash'),
@@ -76,6 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  
+
   Future<bool> isLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
@@ -86,21 +89,22 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: Colors.lightBlueAccent,
+        title: Text(widget.title, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                // color: Colors.blue,
+                color: Theme.of(context).colorScheme.surfaceVariant
               ),
               child: Text(
                 'Menu',
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: Theme.of(context).colorScheme.onSecondary,
                   fontSize: 24,
                 ),
               ),
@@ -134,16 +138,25 @@ class _MyHomePageState extends State<MyHomePage> {
                     WashStation washStation = snapshot.data![index];
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => WashStationPage(washStation: washStation)));
                 },
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: ListTile(
-                        title: Text(snapshot.data![index].name),
-                        subtitle: Text(snapshot.data![index].address),
-                      ),
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Theme.of(context).colorScheme.surfaceVariant,
                     ),
-                    const Expanded(child: Icon(Icons.euro)),
-                  ],
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: ListTile(
+                            title: Text(snapshot.data![index].name),
+                            subtitle: Text(snapshot.data![index].address, style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),),
+                          ),
+                        ),
+                        const Expanded(child: Icon(Icons.euro)),
+                      ],
+                    ),
+                  ),
                 ),
               );
             },

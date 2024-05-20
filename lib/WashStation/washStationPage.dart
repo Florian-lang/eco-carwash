@@ -1,3 +1,4 @@
+import 'package:eco_carwash/pricePage.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
@@ -6,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Entity/WashStation.dart';
 
 class WashStationPage extends StatefulWidget{
-  const WashStationPage({Key? key, required this.washStation}) : super(key: key);
+  const WashStationPage({super.key, required this.washStation});
 
   final WashStation washStation;
   @override
@@ -48,15 +49,16 @@ class _WashStationPageState extends State<WashStationPage> {
         if(snapshot.data == true){isloggin = true;}
         return Scaffold(
             appBar: AppBar(
-              title: Text(widget.washStation.name),
-              backgroundColor: Colors.lightBlueAccent,
+              title: Text(widget.washStation.name, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+              // backgroundColor: Colors.lightBlueAccent,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
-            backgroundColor: Colors.deepPurpleAccent[50],
+            backgroundColor: Theme.of(context).colorScheme.background,
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(widget.washStation.name, style: const TextStyle(fontSize: 40)),
+                  Text(widget.washStation.name, style: TextStyle(fontSize: 40, color: Theme.of(context).colorScheme.onBackground)),
                   const SizedBox(height: 40),
                   GestureDetector(
                     onTap: _launchGPS,
@@ -64,7 +66,7 @@ class _WashStationPageState extends State<WashStationPage> {
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.surfaceVariant,
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
@@ -77,8 +79,9 @@ class _WashStationPageState extends State<WashStationPage> {
                       ),
                       child: Column(
                         children: [
-                          Text(widget.washStation.address, style: const TextStyle(
+                          Text(widget.washStation.address, style: TextStyle(
                               fontSize: 24,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                               fontWeight: FontWeight.bold,
                               fontStyle: FontStyle.italic,
                               letterSpacing: 1.5,
@@ -92,7 +95,12 @@ class _WashStationPageState extends State<WashStationPage> {
                   const SizedBox(height: 60),
                   // Text("Prix :  ${washStation.prices}", style: const TextStyle(fontSize: 30)),
                   if(isloggin)
-                    const Icon(Icons.euro),
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const WashStationPricePage()));
+                      },
+                      child: const Icon(Icons.euro)),
+
                   const SizedBox(height: 60),
                 ],
               ),
