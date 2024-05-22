@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Entity/WashStation.dart';
+import 'model/wash_station.dart';
 import 'loginPage.dart';
 import 'WashStation/washStationPage.dart';
 
