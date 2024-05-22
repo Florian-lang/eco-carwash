@@ -96,6 +96,7 @@ class _LoginPageState extends State<LoginPage> {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Déconnexion'),
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
             body: Center(
               child: Column(

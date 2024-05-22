@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        colorSchemeSeed:Color.fromARGB(255, 77, 125, 180),
+        colorSchemeSeed:Color.fromARGB(255, 18, 234, 245),
+        // colorSchemeSeed:Color.fromARGB(255, 77, 125, 180),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Eco CarWash'),
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text(
                 'Menu',
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSecondary,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 24,
                 ),
               ),
