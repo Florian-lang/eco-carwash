@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Entity/WashStation.dart';
+import '../model/wash_station.dart';
 
 class WashStationPage extends StatefulWidget{
   const WashStationPage({super.key, required this.washStation});
@@ -50,7 +50,6 @@ class _WashStationPageState extends State<WashStationPage> {
         return Scaffold(
             appBar: AppBar(
               title: Text(widget.washStation.name, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-              // backgroundColor: Colors.lightBlueAccent,
               backgroundColor: Theme.of(context).colorScheme.primary,
             ),
             backgroundColor: Theme.of(context).colorScheme.background,

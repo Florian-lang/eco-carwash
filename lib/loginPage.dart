@@ -1,3 +1,4 @@
+import 'package:eco_carwash/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -15,7 +16,9 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+ 
+  late String username;
+  late int id;
   bool connexion = false;
 
   Future<void> login() async {
@@ -50,10 +53,12 @@ class _LoginPageState extends State<LoginPage> {
       Map<String, dynamic> jsonResponse = json.decode(response.body);
       String token = jsonResponse['token'];
       String username = jsonResponse['user'];
+      int userId = jsonResponse['userId'];
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', token);
       await prefs.setString('user', username);
+      await prefs.setInt('userId', userId);
 
       Navigator.pushReplacement(
         context,
@@ -84,6 +89,12 @@ class _LoginPageState extends State<LoginPage> {
     return username ?? '';
   }
 
+  Future<int> getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? userId = prefs.getInt('userId');
+    return userId ?? 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
@@ -93,22 +104,45 @@ class _LoginPageState extends State<LoginPage> {
           return const CircularProgressIndicator();
         }
 
-        if (snapshot.data == true) {
+        if (snapshot.data == true) { // User is logged in
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Déconnexion'),
+              title: Text('Mon compte', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
               backgroundColor: Theme.of(context).colorScheme.primary,
             ),
             body: Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  FutureBuilder(future: getUsername(), builder: (context, snapshot) {
+                  FutureBuilder(future: getUserId(), builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
                     }
-                    return Text('Vous êtes connecté en tant que ${snapshot.data}');
+                    if (snapshot.data is int) {
+                      // username = snapshot.data!;
+                      id = snapshot.data!;
+                    }
+                    return Column(children: <Widget>[
+                      // Text('Connecté en tant que $username'),
+                      const Text("coucou bg"),
+                      const SizedBox(height: 20),
+                      FutureBuilder(
+                        future: User.getUserById(id), 
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
+                          if (snapshot.data is User) {
+                            User user = snapshot.data!;
+                            return Text('Appréciation: ${user.appreciation}');
+                          }else{
+                            return const Text('Erreur lors de la récupération des informations utilisateur');
+                          }
+                        }
+                      ),
+                    ],);
                   }),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       logout();
@@ -121,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         } else {
-          return Scaffold(
+          return Scaffold( // User is not logged in
             appBar: AppBar(
               title: Text('Connexion', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
               backgroundColor: Theme.of(context).colorScheme.primary,
