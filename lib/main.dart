@@ -65,7 +65,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   Future<List<WashStation>> fetchWashStations() async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:8081/api/wash_stations?page=1'));
+    final response = await http.get(Uri.parse('http://localhost:8081/api/wash_stations?page=1'));
+
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);

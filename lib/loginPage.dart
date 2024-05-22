@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
       connexion = true;
     });
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8081/api/login'),
+      Uri.parse('http://localhost:8081/api/login'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
