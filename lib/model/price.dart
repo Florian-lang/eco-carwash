@@ -1,12 +1,9 @@
-import 'package:eco_carwash/model/wash_station.dart';
-import 'package:eco_carwash/model/user.dart';
-
 final class Price {
   final int? id;
   final double value;
-  final double rate;
-  final WashStation washStation;
-  final User modelUser;
+  final int rate;
+  final String washStation;
+  final String modelUser;
 
   Price({
     required this.id,
@@ -24,5 +21,15 @@ final class Price {
       washStation: json['washStation'],
       modelUser: json['modelUser']
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'value': value,
+      'rate': rate,
+      'washStation': washStation,
+      'modelUser': modelUser
+    };
   }
 }

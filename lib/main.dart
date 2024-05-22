@@ -1,13 +1,13 @@
 import 'dart:convert';
-import 'dart:math';
+import 'package:eco_carwash/wash_station/wash_station_page.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'config.dart';
 import 'model/wash_station.dart';
-import 'loginPage.dart';
-import 'WashStation/washStationPage.dart';
+import 'login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -78,8 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchWashStations() async {
-    final response = await http.get(Uri.parse('http://localhost:8081/api/wash_stations?page=1'));
-
+    final response = await http.get(Uri.parse('${Config.API_URL}wash_stations?page=1'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);

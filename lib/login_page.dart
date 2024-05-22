@@ -1,9 +1,10 @@
-import 'package:eco_carwash/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'config.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
- 
+
   late String username;
   late int id;
   bool connexion = false;
@@ -26,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
       connexion = true;
     });
     final response = await http.post(
-      Uri.parse('http://localhost:8081/api/login'),
+      Uri.parse('${Config.API_URL}login'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -127,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                       const Text("coucou bg"),
                       const SizedBox(height: 20),
                       FutureBuilder(
-                        future: User.getUserById(id), 
+                        future: User.getUserById(id),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return const CircularProgressIndicator();
