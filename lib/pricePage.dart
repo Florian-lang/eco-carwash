@@ -15,7 +15,8 @@ class _WashStationPricePage extends State<WashStationPricePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Saisir un tarif pour une station service'),
+        title: Text('Tarif', style: TextStyle(fontSize: 25, color: Theme.of(context).colorScheme.onPrimary)),
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Form(
         key: _formKey,
@@ -25,7 +26,7 @@ class _WashStationPricePage extends State<WashStationPricePage> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: TextFormField(
                 controller: _priceController,
-                decoration: const InputDecoration(labelText: 'Tarif'),
+                decoration: const InputDecoration(labelText: 'Saisir le tarif de la station de lavage'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -43,7 +44,8 @@ class _WashStationPricePage extends State<WashStationPricePage> {
                   print('Tarif: ${_priceController.text}');
                 }
               },
-              child: const Text('Enregistrer'),
+              style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
+              child: Text('Enregistrer', style: TextStyle(color: Theme.of(context).colorScheme.onSecondary)),
             ),
           ],
         ),
