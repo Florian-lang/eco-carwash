@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -62,7 +64,7 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
-
+// TODO gerer un boutton reset filter pour retirer les filtres  et aussi gestion des addres ergonomiques
 class _MyHomePageState extends State<MyHomePage> {
   String sortBy ='price';
   String searchAddress = '';
@@ -92,35 +94,41 @@ class _MyHomePageState extends State<MyHomePage> {
       throw Exception('Failed to load wash stations');
     }
   }
-  void filterStations(){
+  Future<void> filterStations() async {
     List<WashStation> tempStations = washStations;
-    if(searchAddress.isNotEmpty){
-      tempStations= tempStations.where((station)=>
-          station.address.toLowerCase().contains(searchAddress.toLowerCase())).toList();
-    }
-    if(sortBy=='price'){
-      //tempStations.sort((a, b)=> a.price.compareTo(b.price));
-    }else if( sortBy=='address'){
-      tempStations.sort((a,b)=> a.address.compareTo(b.address));
 
+    if (sortBy == 'address' && searchAddress.isNotEmpty) {
+      List<Location> locations = await locationFromAddress(searchAddress);
+      if (locations.isNotEmpty) {
+        double searchLat = locations.first.latitude;
+        double searchLng = locations.first.longitude;
+
+        tempStations.sort((a, b) {
+          double distanceA = _calculateDistance(searchLat, searchLng, a.latitude, a.longitude);
+          double distanceB = _calculateDistance(searchLat, searchLng, b.latitude, b.longitude);
+          return distanceA.compareTo(distanceB);
+        });
+      }
+    } else if (sortBy == 'price') {
+      //tempStations.sort((a, b) => a.price.compareTo(b.price));
     }
+
     setState(() {
-      filteredStations=tempStations;
+      filteredStations = tempStations;
     });
   }
-  
 
-  Future<bool> isLoggedIn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-    return token != null;
+  double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    const p = 0.017453292519943295; // pi / 180
+    final a = 0.5 - cos((lat2 - lat1) * p) / 2 + cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a)); // 2 * R; R = 6371 km
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+        title: Text(widget.title, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       drawer: Drawer(
@@ -128,9 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceVariant
-              ),
+              decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceVariant),
               child: Text(
                 'Menu',
                 style: TextStyle(
@@ -156,33 +162,39 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Rechercher par adresse',
-                      border: OutlineInputBorder(),
-                    ),
+                  child: DropdownButton<String>(
+                    value: sortBy,
+                    items: const [
+                      DropdownMenuItem(value: 'price', child: Text('Trier par prix')),
+                      DropdownMenuItem(value: 'address', child: Text('Trier par adresse')),
+                    ],
                     onChanged: (value) {
                       setState(() {
-                        searchAddress = value;
+                        sortBy = value!;
+                        if (sortBy == 'price') {
+                          searchAddress = '';
+                        }
                         filterStations();
                       });
                     },
                   ),
                 ),
                 const SizedBox(width: 10),
-                DropdownButton<String>(
-                  value: sortBy,
-                  items: const [
-                    DropdownMenuItem(value: 'price', child: Text('Trier par prix')),
-                    DropdownMenuItem(value: 'address', child: Text('Trier par adresse')),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      sortBy = value!;
-                      filterStations();
-                    });
-                  },
-                ),
+                if (sortBy == 'address')
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Rechercher par adresse',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          searchAddress = value;
+                          filterStations();
+                        });
+                      },
+                    ),
+                  ),
               ],
             ),
           ),
