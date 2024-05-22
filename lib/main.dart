@@ -64,20 +64,50 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String sortBy ='price';
+  String searchAddress = '';
+  List<WashStation> washStations = [];
+  List<WashStation> filteredStations = [];
+  bool isLoading = true;
+  @override
+  void initState(){
+    super.initState();
+    fetchWashStations();
+  }
 
-  Future<List<WashStation>> fetchWashStations() async {
+  Future<void> fetchWashStations() async {
     final response = await http.get(Uri.parse('http://localhost:8081/api/wash_stations?page=1'));
 
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);
       List washStations = jsonResponse['hydra:member'];
-      return washStations.map((item) => WashStation.fromJson(item)).toList();
+      List<WashStation> stations= washStations.map((item) => WashStation.fromJson(item)).toList();
+      setState(() {
+        washStations = stations;
+        filteredStations = stations;
+        isLoading = false;
+      });
     } else {
       throw Exception('Failed to load wash stations');
     }
   }
+  void filterStations(){
+    List<WashStation> tempStations = washStations;
+    if(searchAddress.isNotEmpty){
+      tempStations= tempStations.where((station)=>
+          station.address.toLowerCase().contains(searchAddress.toLowerCase())).toList();
+    }
+    if(sortBy=='price'){
+      //tempStations.sort((a, b)=> a.price.compareTo(b.price));
+    }else if( sortBy=='address'){
+      tempStations.sort((a,b)=> a.address.compareTo(b.address));
 
+    }
+    setState(() {
+      filteredStations=tempStations;
+    });
+  }
   
 
   Future<bool> isLoggedIn() async {
@@ -119,49 +149,86 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: FutureBuilder<List<WashStation>>(
-        future: fetchWashStations(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: (){
-                    WashStation washStation = snapshot.data![index];
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => WashStationPage(washStation: washStation)));
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).colorScheme.surfaceVariant,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Rechercher par adresse',
+                      border: OutlineInputBorder(),
                     ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: ListTile(
-                            title: Text(snapshot.data![index].name),
-                            subtitle: Text(snapshot.data![index].address, style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),),
-                          ),
-                        ),
-                        const Expanded(child: Icon(Icons.euro)),
-                      ],
-                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchAddress = value;
+                        filterStations();
+                      });
+                    },
                   ),
                 ),
-              );
-            },
-          );
-        },
+                const SizedBox(width: 10),
+                DropdownButton<String>(
+                  value: sortBy,
+                  items: const [
+                    DropdownMenuItem(value: 'price', child: Text('Trier par prix')),
+                    DropdownMenuItem(value: 'address', child: Text('Trier par adresse')),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      sortBy = value!;
+                      filterStations();
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+              itemCount: filteredStations.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    WashStation washStation = filteredStations[index];
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => WashStationPage(washStation: washStation),
+                    ));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Theme.of(context).colorScheme.surfaceVariant,
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: ListTile(
+                              title: Text(filteredStations[index].name),
+                              subtitle: Text(
+                                filteredStations[index].address,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSecondary,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Expanded(child: Icon(Icons.euro)),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
