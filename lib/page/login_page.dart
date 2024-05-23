@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   late String username;
   late int id;
 
-  bool connexion = false;
+  bool isLoaded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -138,18 +138,24 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  if (connexion) const CircularProgressIndicator(),
-                  if (!connexion)
+                  if (isLoaded) const CircularProgressIndicator(),
+                  if (!isLoaded)
                     ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           try {
+                            setState(() {
+                              isLoaded = true;
+                            });
                             await _userService.login(_emailController.text,
                                 _passwordController.text);
                             setState(() {
-                              connexion = true;
+                              isLoaded = false;
                             });
                           } catch (e) {
+                            setState(() {
+                              isLoaded = false;
+                            });
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
