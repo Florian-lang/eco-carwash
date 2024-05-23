@@ -3,7 +3,7 @@ import 'dart:ffi';
 final class Price {
   final int? id;
   final double value;
-  final int rate;
+  final int? rate;
   final String? washStation;
   final String? modelUser;
 
