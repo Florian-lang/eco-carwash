@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config.dart';
+import 'model/user.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

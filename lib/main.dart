@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:eco_carwash/wash_station/wash_station_page.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config.dart';
 import 'model/wash_station.dart';
