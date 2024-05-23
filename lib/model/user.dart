@@ -40,9 +40,9 @@ factory User.fromJson(Map<String, dynamic> json) {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);
-      var member = jsonResponse['hydra:member'];
-      if (member is List) {
-        return User.fromJson(member.first);
+      var data = jsonResponse['hydra:member'];
+      if (data is List) {
+        return User.fromJson(data.first);
       } else {
         throw Exception('Unexpected response format');
       }
