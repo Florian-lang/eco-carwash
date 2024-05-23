@@ -15,7 +15,6 @@ final class PriceService {
     String? userEmail = prefs.getString('user');
 
     User user = await _userRepository.getUserByUsername(userEmail!);
-
     Price price = Price(
       id: null,
       value: double.parse(priceValue),

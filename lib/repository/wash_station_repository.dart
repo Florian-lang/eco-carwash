@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 final class WashStationRepository {
   Future<List<Price>> getPrices(WashStation washStation) async {
     final response = await http.get(
-        Uri.parse('${Config.API_URL}wash_stations/$washStation.id'));
+        Uri.parse('${Config.API_URL}wash_stations/${washStation.id}'));
 
     if (response.statusCode == Response.HTTP_OK) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);

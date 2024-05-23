@@ -1,9 +1,11 @@
+import 'dart:ffi';
+
 final class Price {
   final int? id;
   final double value;
   final int rate;
-  final String washStation;
-  final String modelUser;
+  final String? washStation;
+  final String? modelUser;
 
   Price({
     required this.id,
@@ -16,7 +18,7 @@ final class Price {
   factory Price.fromJson(Map<String, dynamic> json) {
     return Price(
       id: json['id'],
-      value: json['value'],
+      value: double.parse(json['value'].toString()),
       rate: json['rate'],
       washStation: json['washStation'],
       modelUser: json['modelUser']
