@@ -1,13 +1,7 @@
-import 'dart:convert';
-
 import 'package:eco_carwash/model/wash_station.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
-import 'config.dart';
-import 'model/price.dart';
-import 'model/user.dart';
+import '../service/price_service.dart';
 
 class WashStationPricePage extends StatefulWidget {
   final WashStation washStation;
@@ -21,48 +15,7 @@ class WashStationPricePage extends StatefulWidget {
 class _WashStationPricePage extends State<WashStationPricePage> {
   final _formKey = GlobalKey<FormState>();
   final _priceController = TextEditingController();
-
-  void savePrice() async {
-    if (_formKey.currentState!.validate()) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userEmail = prefs.getString('user');
-
-      if(userEmail == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Vous devez être connecté pour enregistrer un tarif')),
-        );
-        return;
-      }
-
-      User user = await User.getUserByUsername(userEmail);
-      Price price = Price(
-        id: null,
-        value: double.parse(_priceController.text),
-        rate: 0,
-        washStation: widget.washStation.iri,
-        modelUser: user.iri,
-      );
-
-      final response = await http.post(
-        Uri.parse('${Config.API_URL}prices'),
-        headers: <String, String>{
-          'Content-Type': 'application/ld+json; charset=UTF-8',
-        },
-        body: jsonEncode(price),
-      );
-
-      if(response.statusCode != 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Erreur lors de l\'enregistrement du tarif')),
-        );
-        return;
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tarif enregistré')),
-      );
-    }
-  }
+  final _priceService = PriceService();
 
   @override
   Widget build(BuildContext context) {
@@ -91,8 +44,35 @@ class _WashStationPricePage extends State<WashStationPricePage> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                savePrice();
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  try {
+                    _priceService.savePrice(_priceController.text, widget.washStation);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              'Tarif enregistré',
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSecondary
+                              )
+                          ),
+                          backgroundColor: Theme.of(context).colorScheme.secondary,
+                        )
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              'Erreur lors de l\'enregistrement du tarif',
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onError
+                              )
+                          ),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        )
+                    );
+                  }
+                }
               },
               style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
               child: Text('Enregistrer', style: TextStyle(color: Theme.of(context).colorScheme.onSecondary)),

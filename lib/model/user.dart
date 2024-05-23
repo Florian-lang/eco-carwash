@@ -1,8 +1,3 @@
-import 'dart:convert';
-
-import 'package:eco_carwash/config.dart';
-import 'package:http/http.dart' as http;
-
 final class User {
 
   static const String _IRI = '/api/users';
@@ -34,31 +29,5 @@ factory User.fromJson(Map<String, dynamic> json) {
     );
   }
 
-  static Future<User> getUserByUsername(String username) async {
-    final response = await http.get(
-        Uri.parse('${Config.API_URL}users?page=1&email=$username'));
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> jsonResponse = json.decode(response.body);
-      var data = jsonResponse['hydra:member'];
-      if (data is List) {
-        return User.fromJson(data.first);
-      } else {
-        throw Exception('Unexpected response format');
-      }
-    } else {
-      throw Exception('Failed to load user');
-    }
-  }
-
-  static Future<User> getUserById(int id) async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:8081/api/users/$id'));
-    if (response.statusCode == 200) {
-      Map<String, dynamic> jsonResponse = json.decode(response.body);
-      return User.fromJson(jsonResponse);
-    } else {
-      throw Exception('Failed to load user');
-    }
-  }
   String get iri => '$_IRI/$id';
 }
