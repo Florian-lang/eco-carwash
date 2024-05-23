@@ -1,4 +1,4 @@
-import 'package:eco_carwash/pricePage.dart';
+import 'package:eco_carwash/price_page.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
@@ -7,9 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/wash_station.dart';
 
 class WashStationPage extends StatefulWidget{
-  const WashStationPage({super.key, required this.washStation});
-
   final WashStation washStation;
+
+  const WashStationPage(
+      {super.key, required this.washStation}
+  );
+
   @override
   State<WashStationPage> createState() => _WashStationPageState();
 }
@@ -44,7 +47,7 @@ class _WashStationPageState extends State<WashStationPage> {
   @override
   Widget build(BuildContext context){
     return FutureBuilder<bool>(
-      future: isLoggedIn(), 
+      future: isLoggedIn(),
       builder: (context, snapshot){
         if(snapshot.data == true){isloggin = true;}
         return Scaffold(
@@ -92,14 +95,32 @@ class _WashStationPageState extends State<WashStationPage> {
                     ),
                   ),
                   const SizedBox(height: 60),
-                  // Text("Prix :  ${washStation.prices}", style: const TextStyle(fontSize: 30)),
+                  ButtonTheme(child: ElevatedButton(
+                    onPressed: (){
+                      widget.washStation.getPrices();
+                    },
+                    child: const Text('Voir les tarifs'),
+                  ),
+                  ),
                   if(isloggin)
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const WashStationPricePage()));
-                      },
-                      child: const Icon(Icons.euro)),
-
+                    ButtonTheme(
+                      minWidth: 200.0,
+                      height: 50.0,
+                      child: ElevatedButton(
+                        onPressed: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => WashStationPricePage(washStation: widget.washStation)));
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.edit),
+                            SizedBox(width: 10),
+                            Text('Ajouter un nouveau tarif'),
+                          ],
+                        ),
+                      ),
+                    ),
                   const SizedBox(height: 60),
                 ],
               ),
