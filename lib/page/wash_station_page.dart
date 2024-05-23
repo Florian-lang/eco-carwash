@@ -1,8 +1,5 @@
 import 'package:eco_carwash/page/price_page.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/wash_station.dart';
 import '../repository/wash_station_repository.dart';
