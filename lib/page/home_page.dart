@@ -15,7 +15,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-// TODO gerer un boutton reset filter pour retirer les filtres  et aussi gestion des addres ergonomiques
+
+
 class _HomePageState extends State<HomePage> {
   final WashStationRepository _washStationRepository = WashStationRepository();
   final WashStationService _washStationService = WashStationService();
@@ -57,13 +58,32 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceVariant),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 24,
-                ),
+                  color: Theme.of(context).colorScheme.primary),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //CircleAvatar(
+                    //radius: 40,
+                    //backgroundImage: AssetImage('assets/logo.png'), // Replace with your logo
+                  //),
+                  SizedBox(height: 10),
+                  Text(
+                    'Eco CarWash',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Menu',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
               ),
             ),
             ListTile(
@@ -72,6 +92,29 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => const LoginPage()));
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Paramètres'),
+              onTap: () {
+                // Navigate to settings page
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.help),
+              title: const Text('Aide'),
+              onTap: () {
+                // Navigate to help page
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Déconnexion'),
+              onTap: () {
+                // Handle logout action
               },
             ),
           ],
