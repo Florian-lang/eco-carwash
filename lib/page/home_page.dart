@@ -36,6 +36,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void resetFilters() {
+    setState(() {
+      sortBy = 'price';
+      searchAddress = '';
+     initState();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,47 +90,55 @@ class _HomePageState extends State<HomePage> {
                       context: context,
                       position: const RelativeRect.fromLTRB(10, 70, 10, 0),
                       items: [
-                        PopupMenuItem<String>(
+                        const PopupMenuItem<String>(
                           value: 'price',
                           child: Text('Trier par prix'),
                         ),
-                        PopupMenuItem<String>(
+                        const PopupMenuItem<String>(
                           value: 'address',
                           child: Text('Trier par adresse'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'reset',
+                          child: Text('Réinitialiser les filtres'),
                         ),
                       ],
                     ).then((value) {
                       if (value != null) {
                         setState(() {
-                          sortBy = value;
-                          if (sortBy == 'price') {
-                            searchAddress = '';
-                            _washStationService.filterWashStations(washStations, sortBy, searchAddress);
-                          } else if (sortBy == 'address') {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Rechercher par adresse'),
-                                content: TextField(
-                                  decoration: const InputDecoration(
-                                    labelText: 'Adresse',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  onChanged: (value) {
-                                    searchAddress = value;
-                                  },
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      _washStationService.filterWashStations(washStations, sortBy, searchAddress);
-                                      Navigator.of(context).pop();
+                          if (value == 'reset') {
+                            resetFilters();
+                          } else {
+                            sortBy = value;
+                            if (sortBy == 'price') {
+                              searchAddress = '';
+                              _washStationService.filterWashStations(washStations, sortBy, searchAddress);
+                            } else if (sortBy == 'address') {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Rechercher par adresse'),
+                                  content: TextField(
+                                    decoration: const InputDecoration(
+                                      labelText: 'Adresse',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    onChanged: (value) {
+                                      searchAddress = value;
                                     },
-                                    child: const Text('OK'),
                                   ),
-                                ],
-                              ),
-                            );
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        _washStationService.filterWashStations(washStations, sortBy, searchAddress);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
                           }
                         });
                       }
