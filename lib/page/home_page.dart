@@ -75,56 +75,68 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Expanded(
-                  child: DropdownButton<String>(
-                    value: sortBy,
-                    items: const [
-                      DropdownMenuItem(
-                          value: 'price', child: Text('Trier par prix')),
-                      DropdownMenuItem(
-                          value: 'address', child: Text('Trier par adresse')),
+                GestureDetector(
+                  onTap: () {
+                    showMenu(
+                      context: context,
+                      position: const RelativeRect.fromLTRB(10, 70, 10, 0),
+                      items: [
+                        PopupMenuItem<String>(
+                          value: 'price',
+                          child: Text('Trier par prix'),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'address',
+                          child: Text('Trier par adresse'),
+                        ),
+                      ],
+                    ).then((value) {
+                      if (value != null) {
+                        setState(() {
+                          sortBy = value;
+                          if (sortBy == 'price') {
+                            searchAddress = '';
+                            _washStationService.filterWashStations(washStations, sortBy, searchAddress);
+                          } else if (sortBy == 'address') {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Rechercher par adresse'),
+                                content: TextField(
+                                  decoration: const InputDecoration(
+                                    labelText: 'Adresse',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  onChanged: (value) {
+                                    searchAddress = value;
+                                  },
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      _washStationService.filterWashStations(washStations, sortBy, searchAddress);
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        });
+                      }
+                    });
+                  },
+                  child: Row(
+                    children: const [
+                      Icon(Icons.filter_list),
+                      SizedBox(width: 5),
+                      Text('Filter'),
                     ],
-                    onChanged: (value) {
-                      setState(() {
-                        sortBy = value!;
-                        isLoading = true;
-                        if (sortBy == 'price') {
-                          searchAddress = '';
-                        }
-                        _washStationService.filterWashStations(washStations, sortBy, searchAddress)
-                            .then((stations) => setState(() {
-                              washStations = stations;
-                          }),
-                        );
-
-                        isLoading = false;
-                      });
-                    },
                   ),
                 ),
-                const SizedBox(width: 10),
-                if (sortBy == 'address')
-                  Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'Rechercher par adresse',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          isLoading = true;
-                          searchAddress = value;
-                          _washStationService.filterWashStations(washStations, sortBy, searchAddress)
-                              .then((stations) => setState(() {
-                                washStations = stations;
-                            }),
-                          );
-                          isLoading = false;
-                        });
-                      },
-                    ),
-                  ),
               ],
             ),
           ),
@@ -132,47 +144,47 @@ class _HomePageState extends State<HomePage> {
             child: isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
-                    itemCount: washStations.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          WashStation washStation = washStations[index];
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                WashStationPage(washStation: washStation),
-                          ));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color:
-                                  Theme.of(context).colorScheme.surfaceVariant,
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: ListTile(
-                                    title: Text(washStations[index].name),
-                                    subtitle: Text(
-                                      washStations[index].address,
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSecondary,
-                                      ),
-                                    ),
-                                  ),
+              itemCount: washStations.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    WashStation washStation = washStations[index];
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          WashStationPage(washStation: washStation),
+                    ));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color:
+                        Theme.of(context).colorScheme.surfaceVariant,
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: ListTile(
+                              title: Text(washStations[index].name),
+                              subtitle: Text(
+                                washStations[index].address,
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSecondary,
                                 ),
-                                const Expanded(child: Icon(Icons.euro)),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                          const Expanded(child: Icon(Icons.euro)),
+                        ],
+                      ),
+                    ),
                   ),
+                );
+              },
+            ),
           ),
         ],
       ),
