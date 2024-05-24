@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     'Eco CarWash',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     'Menu',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontSize: 16,
                     ),
                   ),
