@@ -1,10 +1,14 @@
+import 'package:eco_carwash/model/price.dart';
 import 'package:eco_carwash/page/price_page.dart';
+import 'package:eco_carwash/repository/price_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../model/wash_station.dart';
-import '../repository/wash_station_repository.dart';
 import '../service/user_service.dart';
 import '../service/wash_stations_service.dart';
+
+import 'package:eco_carwash/widget/info_container.dart';
+import 'package:eco_carwash/widget/custom_app_bar.dart';
 
 class WashStationPage extends StatefulWidget{
   final WashStation washStation;
@@ -18,7 +22,7 @@ class WashStationPage extends StatefulWidget{
 }
 
 class _WashStationPageState extends State<WashStationPage> {
-  final _washStationRepository = WashStationRepository();
+  final _priceRepository = PriceRepository();
   final _userService = UserService();
   final _washStationService = WashStationService();
 
@@ -31,58 +35,32 @@ class _WashStationPageState extends State<WashStationPage> {
       builder: (context, snapshot){
         if(snapshot.data == true){isloggin = true;}
         return Scaffold(
-            appBar: AppBar(
-              title: Text(widget.washStation.name, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            ),
-            backgroundColor: Theme.of(context).colorScheme.background,
+            appBar: CustomAppBar(name: widget.washStation.name),
+            backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(widget.washStation.name, style: TextStyle(fontSize: 40, color: Theme.of(context).colorScheme.onBackground)),
+                  Text(widget.washStation.name, style: TextStyle(fontSize: 40, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                   const SizedBox(height: 40),
                   GestureDetector(
                     onTap: () {
                       _washStationService.launchGPS(widget.washStation);
                     },
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceVariant,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            spreadRadius: 2,
-                            blurRadius: 2,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Text(widget.washStation.address, style: TextStyle(
-                              fontSize: 24,
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                              letterSpacing: 1.5,
-                              wordSpacing: 2
-                          ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    child: MyInfoContainer(title: widget.washStation.address, subtitle: "lattitude: ${widget.washStation.latitude} longitude: ${widget.washStation.longitude}", icon: Icons.launch_outlined),
                   ),
                   const SizedBox(height: 60),
-                  ButtonTheme(child: ElevatedButton(
-                    onPressed: (){
-                      _washStationRepository.getPrices(widget.washStation);
-                    },
-                    child: const Text('Voir les tarifs'),
-                  ),
+                  FutureBuilder(
+                    future: _priceRepository.getPrices(widget.washStation), 
+                    builder: (context, snapshot){
+                      if(snapshot.data is List<Price>){
+                        return Column(
+                          children: (snapshot.data?.map<Widget>((price) => MyInfoContainer(title: price.value.toString(), subtitle: "score : ${price.rate}", icon: Icons.money)).toList() ?? []),
+                        );
+                      }else{
+                        return const CircularProgressIndicator();
+                      }
+                    }
                   ),
                   if(isloggin)
                     ButtonTheme(

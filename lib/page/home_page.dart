@@ -1,9 +1,11 @@
+import 'package:eco_carwash/page/wash_station_map_page.dart';
 import 'package:eco_carwash/config.dart';
 import 'package:eco_carwash/page/setting_page.dart';
 import 'package:eco_carwash/page/wash_station_page.dart';
 import 'package:eco_carwash/service/user_service.dart';
 import 'package:eco_carwash/service/tools_service.dart';
 import 'package:eco_carwash/service/wash_stations_service.dart';
+import 'package:eco_carwash/widget/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -95,11 +97,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title,
-            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+      appBar: CustomAppBar(name: widget.title),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -281,9 +279,7 @@ class _HomePageState extends State<HomePage> {
                                     subtitle: Text(
                                       item.address,
                                       style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSecondary,
+                                        color: Theme.of(context).colorScheme.onSecondary,
                                       ),
                                     ),
                                   ),

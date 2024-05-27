@@ -1,4 +1,5 @@
 import 'package:eco_carwash/repository/user_repository.dart';
+import 'package:eco_carwash/widget/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../model/user.dart';
@@ -38,12 +39,7 @@ class _LoginPageState extends State<LoginPage> {
         if (snapshot.data == true) {
           // User is logged in
           return Scaffold(
-            appBar: AppBar(
-              title: Text('Mon compte',
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary)),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            ),
+            appBar: const CustomAppBar(name: "mon compte"),
             body: Center(
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.center,
