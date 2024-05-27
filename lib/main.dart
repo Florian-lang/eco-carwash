@@ -1,8 +1,19 @@
 import 'package:eco_carwash/page/home_page.dart';
+import 'package:eco_carwash/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  ThemeData themeData = ThemeData.from(
+      colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 18, 234, 245))
+  );
+
+  runApp(
+    ChangeNotifierProvider<ThemeProvider>(
+      create: (_) => ThemeProvider(themeData),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -11,14 +22,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorSchemeSeed:Color.fromARGB(255, 18, 234, 245),
-        // colorSchemeSeed:Color.fromARGB(255, 77, 125, 180),
-        useMaterial3: true,
-      ),
+      theme: themeProvider.getTheme(),
       home: const HomePage(title: 'Eco CarWash'),
     );
   }

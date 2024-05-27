@@ -1,11 +1,14 @@
+import 'package:eco_carwash/config.dart';
+import 'package:eco_carwash/page/setting_page.dart';
 import 'package:eco_carwash/page/wash_station_page.dart';
+import 'package:eco_carwash/service/user_service.dart';
 import 'package:eco_carwash/service/tools_service.dart';
 import 'package:eco_carwash/service/wash_stations_service.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../model/wash_station.dart';
 import '../repository/wash_station_repository.dart';
-import '../service/user_service.dart';
 import 'login_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,11 +20,10 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-
-
 class _HomePageState extends State<HomePage> {
   final WashStationRepository _washStationRepository = WashStationRepository();
   final WashStationService _washStationService = WashStationService();
+  final UserService _userService = UserService();
 
   String sortBy = 'price';
   String searchAddress = '';
@@ -48,6 +50,14 @@ class _HomePageState extends State<HomePage> {
      initState();
     });
   }
+
+  Future<void> _launchUrl() async {
+    final Uri url = Uri.parse(Config.API_URL);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,7 +113,15 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.settings),
               title: const Text('Paramètres'),
               onTap: () {
-                // Navigate to settings page
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SettingPage()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.api),
+              title: const Text('Voir l\'API'),
+              onTap: () {
+                _launchUrl();
               },
             ),
             ListTile(
