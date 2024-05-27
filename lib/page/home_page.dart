@@ -1,4 +1,5 @@
 import 'package:eco_carwash/page/wash_station_page.dart';
+import 'package:eco_carwash/service/tools_service.dart';
 import 'package:eco_carwash/service/wash_stations_service.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   String searchAddress = '';
   List<WashStation> washStations = [];
   bool isLoading = true;
+  final ToolsService toolsService = ToolsService();
 
   @override
   void initState() {
@@ -105,9 +107,7 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: const Icon(Icons.help),
               title: const Text('Aide'),
-              onTap: () {
-                // Navigate to help page
-              },
+              onTap: toolsService.sendEmail,
             ),
             const Divider(),
             ListTile(
