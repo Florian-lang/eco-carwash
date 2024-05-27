@@ -2,6 +2,7 @@ import 'package:eco_carwash/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../model/user.dart';
+import '../service/tools_service.dart';
 import '../service/user_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final _userRepository = UserRepository();
   final _userService = UserService();
+  final ToolsService toolsService = ToolsService();
 
   late String username;
   late int id;
@@ -84,8 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      _userService.logout();
-                      setState(() {}); // Refresh the UI
+                      toolsService.showLogoutConfirmationDialog(context);// Refresh the UI
                     },
                     child: const Text('Se déconnecter'),
                   ),

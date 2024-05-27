@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../model/wash_station.dart';
 import '../repository/wash_station_repository.dart';
+import '../service/user_service.dart';
 import 'login_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   List<WashStation> washStations = [];
   bool isLoading = true;
   final ToolsService toolsService = ToolsService();
+
 
   @override
   void initState() {
@@ -114,7 +116,7 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.logout),
               title: const Text('Déconnexion'),
               onTap: () {
-                // Handle logout action
+                 toolsService.showLogoutConfirmationDialog(context);// Refresh the UI
               },
             ),
           ],

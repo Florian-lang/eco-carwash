@@ -1,6 +1,9 @@
+import 'package:eco_carwash/service/user_service.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final class ToolsService {
+  final _userService = UserService();
 
   Future<void> sendEmail() async {
     final Uri emailLaunchUri = Uri(
@@ -23,4 +26,39 @@ final class ToolsService {
         .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
         .join('&');
   }
+
+  Future<void> showLogoutConfirmationDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // l'utilisateur doit taper sur un bouton pour fermer
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Déconnexion'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Voulez-vous vraiment vous déconnecter ?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Non'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Ferme la boîte de dialogue
+              },
+            ),
+            TextButton(
+              child: Text('Oui'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Ferme la boîte de dialogue
+                  _userService.logout(); // Appelle la méthode de déconnexion
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }
