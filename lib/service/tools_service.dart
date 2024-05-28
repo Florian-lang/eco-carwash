@@ -32,31 +32,7 @@ final class ToolsService {
       context: context,
       barrierDismissible: false, // l'utilisateur doit taper sur un bouton pour fermer
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Déconnexion'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Voulez-vous vraiment vous déconnecter ?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Non'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Ferme la boîte de dialogue
-              },
-            ),
-            TextButton(
-              child: Text('Oui'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Ferme la boîte de dialogue
-                  _userService.logout(); // Appelle la méthode de déconnexion
-              },
-            ),
-          ],
-        );
+        return const LogoutModalWidget();
       },
     );
   }
