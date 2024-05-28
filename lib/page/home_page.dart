@@ -1,9 +1,11 @@
 import 'package:eco_carwash/page/wash_station_page.dart';
+import 'package:eco_carwash/service/tools_service.dart';
 import 'package:eco_carwash/service/wash_stations_service.dart';
 import 'package:flutter/material.dart';
 
 import '../model/wash_station.dart';
 import '../repository/wash_station_repository.dart';
+import '../service/user_service.dart';
 import 'login_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,6 +27,8 @@ class _HomePageState extends State<HomePage> {
   String searchAddress = '';
   List<WashStation> washStations = [];
   bool isLoading = true;
+  final ToolsService toolsService = ToolsService();
+
 
   @override
   void initState() {
@@ -105,16 +109,14 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: const Icon(Icons.help),
               title: const Text('Aide'),
-              onTap: () {
-                // Navigate to help page
-              },
+              onTap: toolsService.sendEmail,
             ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Déconnexion'),
               onTap: () {
-                // Handle logout action
+                 toolsService.showLogoutConfirmationDialog(context);// Refresh the UI
               },
             ),
           ],
