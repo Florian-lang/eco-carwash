@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 final class Price {
   final int? id;
   final double value;

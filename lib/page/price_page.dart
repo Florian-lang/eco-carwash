@@ -1,4 +1,5 @@
 import 'package:eco_carwash/model/wash_station.dart';
+import 'package:eco_carwash/widget/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../service/price_service.dart';
@@ -20,10 +21,7 @@ class _WashStationPricePage extends State<WashStationPricePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Tarif', style: TextStyle(fontSize: 25, color: Theme.of(context).colorScheme.onPrimary)),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+      appBar: const CustomAppBar(name: "Tarif de la station de lavage"),
       body: Form(
         key: _formKey,
         child: Column(
