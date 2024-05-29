@@ -13,9 +13,7 @@ final class ToolsService {
       }),
     );
 
-    if (await canLaunch(emailLaunchUri.toString())) {
-      await launch(emailLaunchUri.toString());
-    } else {
+    if (!await launchUrl(emailLaunchUri)) {
       throw 'Could not launch $emailLaunchUri';
     }
   }
