@@ -1,11 +1,16 @@
+import 'package:eco_carwash/config.dart';
+import 'package:eco_carwash/page/setting_page.dart';
 import 'package:eco_carwash/page/wash_station_page.dart';
+import 'package:eco_carwash/service/user_service.dart';
 import 'package:eco_carwash/service/tools_service.dart';
 import 'package:eco_carwash/service/wash_stations_service.dart';
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../model/paginator.dart';
 import '../model/wash_station.dart';
 import '../repository/wash_station_repository.dart';
-import '../service/user_service.dart';
 import 'login_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,11 +22,13 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-
-
 class _HomePageState extends State<HomePage> {
   final WashStationRepository _washStationRepository = WashStationRepository();
   final WashStationService _washStationService = WashStationService();
+  final UserService _userService = UserService();
+  final _pagingController = PagingController<int, WashStation>(
+    firstPageKey: 1,
+  );
 
   String sortBy = 'price';
   String searchAddress = '';
@@ -33,21 +40,58 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _washStationRepository.getWashStations().then((List<WashStation> stations) {
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+    _fetchPage(_pagingController.firstPageKey);
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchPage(int pageKey) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final newItems = await _washStationRepository.getWashStations(pageKey);
+
+      final isLastPage =
+          newItems.items.length < Paginator.DEFAULT_ITEM_PER_PAGE;
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems.items);
+      } else {
+        final nextPageKey = pageKey + 1;
+        _pagingController.appendPage(newItems.items, nextPageKey);
+      }
+
       setState(() {
-        washStations = stations;
         isLoading = false;
       });
-    });
+    } catch (error) {
+      _pagingController.error = error;
+    }
   }
 
   void resetFilters() {
     setState(() {
       sortBy = 'price';
       searchAddress = '';
-     initState();
+      initState();
     });
   }
+
+  Future<void> _launchUrl() async {
+    final Uri url = Uri.parse(Config.API_URL);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,17 +105,17 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary),
+              decoration:
+                  BoxDecoration(color: Theme.of(context).colorScheme.primary),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //CircleAvatar(
-                    //radius: 40,
-                    //backgroundImage: AssetImage('assets/logo.png'), // Replace with your logo
+                  //radius: 40,
+                  //backgroundImage: AssetImage('assets/logo.png'), // Replace with your logo
                   //),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     'Eco CarWash',
                     style: TextStyle(
@@ -103,7 +147,15 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.settings),
               title: const Text('Paramètres'),
               onTap: () {
-                // Navigate to settings page
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SettingPage()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.api),
+              title: const Text('Voir l\'API'),
+              onTap: () {
+                _launchUrl();
               },
             ),
             ListTile(
@@ -203,48 +255,46 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-              itemCount: washStations.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    WashStation washStation = washStations[index];
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          WashStationPage(washStation: washStation),
-                    ));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color:
-                        Theme.of(context).colorScheme.surfaceVariant,
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: ListTile(
-                              title: Text(washStations[index].name),
-                              subtitle: Text(
-                                washStations[index].address,
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSecondary,
+                : PagedListView<int, WashStation>(
+                    pagingController: _pagingController,
+                    builderDelegate: PagedChildBuilderDelegate<WashStation>(
+                      itemBuilder: (context, item, index) => GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                WashStationPage(washStation: item),
+                          ));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color:
+                                  Theme.of(context).colorScheme.surfaceVariant,
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: ListTile(
+                                    title: Text(item.name),
+                                    subtitle: Text(
+                                      item.address,
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSecondary,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                const Expanded(child: Icon(Icons.euro)),
+                              ],
                             ),
                           ),
-                          const Expanded(child: Icon(Icons.euro)),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
+                    )),
           ),
         ],
       ),
