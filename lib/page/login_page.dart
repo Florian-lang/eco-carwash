@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
         if (snapshot.data == true) {
           // User is logged in
           return Scaffold(
-            appBar: const CustomAppBar(name: "mon compte"),
+            appBar: const CustomAppBar(name: "Mon compte"),
             body: Center(
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.center,
