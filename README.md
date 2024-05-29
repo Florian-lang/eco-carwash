@@ -10,6 +10,7 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur 
 - Flutter
 - Un éditeur de texte (VSCode, Android Studio, IntelliJ, etc.)
 - Un émulateur Android ou iOS ou un appareil physique
+- Une clé api Google Maps
 
 ## Installation
 
@@ -33,6 +34,10 @@ Suivez ces étapes pour installer et configurer le projet :
     ```bash
     ./init.sh
     ```
+4. Insérer votre clé api Google Maps dans le fichier app/src/main/AndroidManifest.xml :
+```xml
+<meta-data android:name="com.google.android.geo.API_KEY" android:value="<votre_clé_api"/>
+```
 
 ## Configuration
 

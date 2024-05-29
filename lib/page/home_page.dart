@@ -1,7 +1,6 @@
 import 'package:eco_carwash/page/wash_station_map_page.dart';
 import 'package:eco_carwash/config.dart';
 import 'package:eco_carwash/page/setting_page.dart';
-import 'package:eco_carwash/page/wash_station_page.dart';
 import 'package:eco_carwash/service/user_service.dart';
 import 'package:eco_carwash/service/tools_service.dart';
 import 'package:eco_carwash/service/wash_stations_service.dart';
