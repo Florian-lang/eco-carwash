@@ -239,8 +239,8 @@ class _HomePageState extends State<HomePage> {
                       }
                     });
                   },
-                  child: Row(
-                    children: const [
+                  child: const Row(
+                    children: [
                       Icon(Icons.filter_list),
                       SizedBox(width: 5),
                       Text('Filter'),
@@ -269,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color:
-                                  Theme.of(context).colorScheme.surfaceVariant,
+                                  Theme.of(context).colorScheme.surfaceContainerHighest,
                             ),
                             child: Row(
                               children: <Widget>[
@@ -279,7 +279,7 @@ class _HomePageState extends State<HomePage> {
                                     subtitle: Text(
                                       item.address,
                                       style: TextStyle(
-                                        color: Theme.of(context).colorScheme.onSecondary,
+                                        color: Theme.of(context).colorScheme.secondary,
                                       ),
                                     ),
                                   ),

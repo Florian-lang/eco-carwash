@@ -71,6 +71,7 @@ class _WashStationPricePage extends State<WashStationPricePage> {
                     );
                   }
                 }
+                Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
               child: Text('Enregistrer', style: TextStyle(color: Theme.of(context).colorScheme.onSecondary)),

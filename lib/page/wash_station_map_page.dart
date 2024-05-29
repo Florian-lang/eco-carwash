@@ -19,6 +19,7 @@ class WashStationMapPage extends StatefulWidget {
   State<WashStationMapPage> createState() => _WashStationMapPageState();
 }
 
+
 class _WashStationMapPageState extends State<WashStationMapPage> {
   final _priceRepository = PriceRepository();
   final _userService = UserService();
@@ -37,7 +38,7 @@ class _WashStationMapPageState extends State<WashStationMapPage> {
           }
           return Scaffold(
             appBar: CustomAppBar(name: widget.washStation.name),
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             body: Stack(children: <Widget>[
               GoogleMap(
                 initialCameraPosition: CameraPosition(
@@ -78,7 +79,7 @@ class _WashStationMapPageState extends State<WashStationMapPage> {
                     maxChildSize: 0.8,
                     builder: (BuildContext context,ScrollController myScrollController) => Container(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceVariant,
+                        color: Theme.of(context).colorScheme.surfaceContainerHighest,
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20),
@@ -125,7 +126,8 @@ class _WashStationMapPageState extends State<WashStationMapPage> {
                       height: 50.0,
                       child: ElevatedButton(
                         onPressed: (){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => WashStationPricePage(washStation: widget.washStation)));
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => WashStationPricePage(washStation: widget.washStation),));
                         },
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
