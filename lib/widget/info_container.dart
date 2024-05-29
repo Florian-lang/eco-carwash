@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class MyInfoContainer extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -32,8 +33,10 @@ class MyInfoContainer extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                      fontSize: 24,
+                      fontSize: MediaQuery.of(context).size.width / 30,
+                      height: MediaQuery.of(context).size.height / 200,
                       color: Theme.of(context).colorScheme.onSurface,
+                      overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.italic,
                       letterSpacing: 1.5,

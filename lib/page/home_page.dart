@@ -24,6 +24,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+// TODO gerer un boutton reset filter pour retirer les filtres  et aussi gestion des addres ergonomiques
 class _HomePageState extends State<HomePage> {
   final WashStationRepository _washStationRepository = WashStationRepository();
   final WashStationService _washStationService = WashStationService();
@@ -259,8 +260,8 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (context, item, index) => GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                WashStationPage(washStation: item),
+                            builder: (context) => 
+                                WashStationMapPage(washStation: item)
                           ));
                         },
                         child: Padding(

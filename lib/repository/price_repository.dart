@@ -22,11 +22,9 @@ final class PriceRepository {
   }
 
   Future<List<Price>> getPrices(WashStation washStation) async {
-    print(washStation.id); 
     final response = await http.get(
         Uri.parse('${Config.API_URL}prices?page=1&washStation=${washStation.id}'));
 
-    print(response.body);
     if (response.statusCode == Response.HTTP_OK) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);
       List data = jsonResponse['hydra:member'];
