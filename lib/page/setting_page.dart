@@ -22,6 +22,7 @@ class SettingPage extends StatelessWidget {
             onChanged: (value) {
               themeProvider.setTheme(value ? ThemeData.dark() : ThemeData.from(colorScheme:
                 ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 18, 234, 245)),
+                useMaterial3: true,
               ));
             },
           ),
