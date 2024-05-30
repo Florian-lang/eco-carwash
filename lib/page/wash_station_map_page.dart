@@ -109,16 +109,20 @@ class _WashStationMapPageState extends State<WashStationMapPage> {
                   ),
                   const SizedBox(height: 60),
                   FutureBuilder(
-                    future: _priceRepository.getPrices(widget.washStation), 
-                    builder: (context, snapshot){
-                      if(snapshot.data is List<Price>){
-                        return Column(
-                          children: (snapshot.data?.map<Widget>((price) => MyInfoContainer(title: price.value.toString(), subtitle: "score : ${price.rate}", icon: Icons.money)).toList() ?? []),
-                        );
-                      }else{
-                        return const CircularProgressIndicator();
+                      future: _priceRepository.getPrices(widget.washStation),
+                      builder: (context, snapshot){
+                        if(snapshot.data is List<Price>){
+                          List<Price> prices = snapshot.data as List<Price>;
+                          List<Widget> priceWidgets = [];
+                          for (var price in prices) {
+                            priceWidgets.add(MyInfoContainer(title: price.value.toString(), subtitle: "score : ${price.rate}", icon: Icons.money));
+                            priceWidgets.add(const SizedBox(height: 20));
+                          }
+                          return Column(children: priceWidgets);
+                        }else{
+                          return const CircularProgressIndicator();
+                        }
                       }
-                    }
                   ),
                   if(isloggin)
                     ButtonTheme(
